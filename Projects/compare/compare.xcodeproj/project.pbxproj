@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EF4CF7B0201216AC00AC1CBC /* libFileLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF4CF7B1201216AC00AC1CBC /* libFileLib.a */; };
+		EF55F57420121AB00087BEA3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF55F57320121AB00087BEA3 /* Cocoa.framework */; };
 		EFA14B5F201216F400CBDDFA /* libFoundationLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA14B60201216F400CBDDFA /* libFoundationLib.a */; };
 		EFA14B612012171B00CBDDFA /* libStringLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA14B622012171B00CBDDFA /* libStringLib.a */; };
 		EFF564992010A5770003D85D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFF564982010A5770003D85D /* main.cpp */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		EF4CF7B1201216AC00AC1CBC /* libFileLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF55F57320121AB00087BEA3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		EFA14B60201216F400CBDDFA /* libFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFA14B622012171B00CBDDFA /* libStringLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStringLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF564952010A5770003D85D /* compare */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = compare; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF55F57420121AB00087BEA3 /* Cocoa.framework in Frameworks */,
 				EFA14B612012171B00CBDDFA /* libStringLib.a in Frameworks */,
 				EFA14B5F201216F400CBDDFA /* libFoundationLib.a in Frameworks */,
 				EF4CF7B0201216AC00AC1CBC /* libFileLib.a in Frameworks */,
@@ -50,6 +53,7 @@
 		EF4CF7AF201216AC00AC1CBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF55F57320121AB00087BEA3 /* Cocoa.framework */,
 				EFA14B622012171B00CBDDFA /* libStringLib.a */,
 				EFA14B60201216F400CBDDFA /* libFoundationLib.a */,
 				EF4CF7B1201216AC00AC1CBC /* libFileLib.a */,

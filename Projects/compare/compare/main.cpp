@@ -26,10 +26,65 @@
 #include "Hermit/File/CompareFiles.h"
 #include "Hermit/File/CreateFilePathFromUTF8String.h"
 #include "Hermit/File/FileExists.h"
+#include "Hermit/File/FileNotification.h"
+#include "Hermit/File/GetFilePathUTF8String.h"
 #include "Hermit/Foundation/LoggingHermit.h"
 #include "Hermit/String/SimplifyPath.h"
 
 namespace compare_Impl {
+
+    //
+    class Hermit : public hermit::Hermit {
+    public:
+        //
+        Hermit(const hermit::HermitPtr& h_) : mH_(h_) {
+        }
+        
+        //
+        virtual bool ShouldAbort() override {
+            return false;
+        }
+        
+        //
+        virtual void Notify(const char* notificationName, const void* param) override {
+            std::string name(notificationName);
+            
+            if ((name == hermit::file::kFilesMatchNotification) ||
+                (name == hermit::file::kFilesDifferNotification) ||
+                (name == hermit::file::kFileSkippedNotification) ||
+                (name == hermit::file::kFileErrorNotification)) {
+                hermit::file::FileNotificationParams* params = (hermit::file::FileNotificationParams*)param;
+                
+                std::string path1UTF8;
+                if (params->mPath1 != nullptr) {
+                    hermit::file::GetFilePathUTF8String(mH_, params->mPath1, path1UTF8);
+                }
+                std::string path2UTF8;
+                if (params->mPath2 != nullptr) {
+                    hermit::file::GetFilePathUTF8String(mH_, params->mPath2, path2UTF8);
+                }
+                
+                if (name == hermit::file::kFilesMatchNotification) {
+                    std::cout << "Match: " << path1UTF8 << std::endl;
+                }
+                else if (name == hermit::file::kFilesDifferNotification) {
+                    std::cout << "Different: " << path1UTF8 << " (" << params->mType << ")" << std::endl;
+                }
+                else if (name == hermit::file::kFileSkippedNotification) {
+                    std::cout << "Skipped: " << path1UTF8 << std::endl;
+                }
+                else {
+                    std::cout << "ERROR: " << path1UTF8 << std::endl;
+                }
+            }
+            else {
+                NOTIFY(mH_, notificationName, param);
+            }
+        }
+        
+        //
+        hermit::HermitPtr mH_;
+    };
 
     //
     typedef std::set<std::string> StringSet;
@@ -80,7 +135,7 @@ namespace compare_Impl {
     
     //
     int compare(const std::string& path1, const std::string& path2, bool ignoreDates, bool ignoreFinderInfo, bool summarize) {
-        auto h_ = std::make_shared<hermit::LoggingHermit>();
+        auto h_ = std::make_shared<Hermit>(std::make_shared<hermit::LoggingHermit>());
 
         std::vector<char> wdBuf(2048);
         std::string workingDir;
