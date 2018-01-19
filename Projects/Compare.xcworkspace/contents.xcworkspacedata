@@ -4,4 +4,17 @@
    <FileRef
       location = "group:compare/compare.xcodeproj">
    </FileRef>
+   <Group
+      location = "container:"
+      name = "Hermit">
+      <FileRef
+         location = "group:../Hermit/Hermit/File/File.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Hermit/Hermit/Foundation/Foundation.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Hermit/Hermit/String/String.xcodeproj">
+      </FileRef>
+   </Group>
 </Workspace>

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF4CF7B0201216AC00AC1CBC /* libFileLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF4CF7B1201216AC00AC1CBC /* libFileLib.a */; };
+		EFA14B5F201216F400CBDDFA /* libFoundationLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA14B60201216F400CBDDFA /* libFoundationLib.a */; };
+		EFA14B612012171B00CBDDFA /* libStringLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA14B622012171B00CBDDFA /* libStringLib.a */; };
 		EFF564992010A5770003D85D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFF564982010A5770003D85D /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +26,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EF4CF7B1201216AC00AC1CBC /* libFileLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFA14B60201216F400CBDDFA /* libFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFA14B622012171B00CBDDFA /* libStringLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStringLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF564952010A5770003D85D /* compare */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = compare; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF564982010A5770003D85D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -32,17 +38,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFA14B612012171B00CBDDFA /* libStringLib.a in Frameworks */,
+				EFA14B5F201216F400CBDDFA /* libFoundationLib.a in Frameworks */,
+				EF4CF7B0201216AC00AC1CBC /* libFileLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF4CF7AF201216AC00AC1CBC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EFA14B622012171B00CBDDFA /* libStringLib.a */,
+				EFA14B60201216F400CBDDFA /* libFoundationLib.a */,
+				EF4CF7B1201216AC00AC1CBC /* libFileLib.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		EFF5648C2010A5770003D85D = {
 			isa = PBXGroup;
 			children = (
 				EFF564972010A5770003D85D /* compare */,
 				EFF564962010A5770003D85D /* Products */,
+				EF4CF7AF201216AC00AC1CBC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -233,6 +253,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = ../../Hermit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -241,6 +262,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = ../../Hermit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
