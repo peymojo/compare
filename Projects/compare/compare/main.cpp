@@ -69,6 +69,18 @@ namespace compare_Impl {
                 }
                 else if (name == hermit::file::kFilesDifferNotification) {
                     std::cout << "Different: " << path1UTF8 << " (" << params->mType << ")" << std::endl;
+                    if (params->mType == hermit::file::kCreationDatesDiffer) {
+                        std::cout << "\t" << "Date 1: " << params->mString1 << std::endl;
+                        std::cout << "\t" << "Date 2: " << params->mString2 << std::endl;
+                    }
+                    else if (params->mType == hermit::file::kXAttrPresenceMismatch) {
+                        if (!params->mString1.empty()) {
+                            std::cout << "\t" << "Only in 1: " << params->mString1 << std::endl;
+                        }
+                        else {
+                            std::cout << "\t" << "Only in 2: " << params->mString2 << std::endl;
+                        }
+                    }
                 }
                 else if (name == hermit::file::kFileSkippedNotification) {
                     std::cout << "Skipped: " << path1UTF8 << std::endl;
