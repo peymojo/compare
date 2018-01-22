@@ -47,6 +47,8 @@ namespace compare_Impl {
         
         //
         virtual void Notify(const char* notificationName, const void* param) override {
+            std::lock_guard<std::mutex> guard(mMutex);
+            
             std::string name(notificationName);
             
             if ((name == hermit::file::kFilesMatchNotification) ||
@@ -96,6 +98,7 @@ namespace compare_Impl {
         
         //
         hermit::HermitPtr mH_;
+        std::mutex mMutex;
     };
 
     //
