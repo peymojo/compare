@@ -2,13 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../README.md">
-   </FileRef>
-   <FileRef
-      location = "group:../LICENSE">
-   </FileRef>
-   <FileRef
       location = "group:compare/compare.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:copy/copy.xcodeproj">
    </FileRef>
    <Group
       location = "container:"
@@ -23,4 +20,10 @@
          location = "group:../Hermit/Hermit/String/String.xcodeproj">
       </FileRef>
    </Group>
+   <FileRef
+      location = "group:../README.md">
+   </FileRef>
+   <FileRef
+      location = "group:../LICENSE">
+   </FileRef>
 </Workspace>

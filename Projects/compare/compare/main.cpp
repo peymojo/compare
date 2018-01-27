@@ -1,5 +1,5 @@
 //
-//    Compare
+//    compare
 //    Copyright (C) 2018 Paul Young (aka peymojo)
 //
 //    This program is free software: you can redistribute it and/or modify
@@ -201,11 +201,11 @@ namespace compare_Impl {
         }
         
         StringSet filenamesToSkip;
-        filenamesToSkip.insert(".DS_Store");            // Finder view file which gets added/updated when you open a folder
-        filenamesToSkip.insert(".ipspot_update");        // Spotlight photo data file which the OS changes on its own
-        filenamesToSkip.insert("ehthumbs.db");            // Windows thumbnails file
-        filenamesToSkip.insert("ehthumbs_vista.db");    // Windows thumbnails file
-        filenamesToSkip.insert("Thumbs.db");            // Windows thumbnails file
+        filenamesToSkip.insert(".DS_Store");                // Finder view file which gets added/updated when you open a folder
+        filenamesToSkip.insert(".ipspot_update");           // Spotlight photo data file which the OS changes on its own
+        filenamesToSkip.insert("ehthumbs.db");              // Windows thumbnails file
+        filenamesToSkip.insert("ehthumbs_vista.db");        // Windows thumbnails file
+        filenamesToSkip.insert("Thumbs.db");                // Windows thumbnails file
         
         auto preprocessor = std::make_shared<Preprocessor>(filenamesToSkip);
         auto completion = std::make_shared<CompareCompletion>();
