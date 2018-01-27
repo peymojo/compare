@@ -26,8 +26,6 @@
 #include <vector>
 
 #include "Hermit/Encoding/CalculateDataCRC32.h"
-//#include "Hermit/Encoding+File/CalculateFileForkCRC32.h"
-//#include "Hermit/Encoding+File/CalculateFileForkCRC32s.h"
 #include "Hermit/File/AppendToFilePath.h"
 #include "Hermit/File/CompareFiles.h"
 #include "Hermit/File/CreateFilePathFromUTF8String.h"
@@ -37,16 +35,11 @@
 #include "Hermit/File/GetFilePathUTF8String.h"
 #include "Hermit/File/FileExists.h"
 #include "Hermit/File/FileNotification.h"
-#include "Hermit/File/FileSystemCopyWithVerify.h"
-//#include "Hermit/File/LogFilePath.h"
+#include "Hermit/File/FileSystemCopy.h"
 #include "Hermit/File/PathIsDirectory.h"
-//#include "Hermit/File/ManagedFilePathPtr.h"
 //#include "Hermit/File/StreamInFileForkRange.h"
-//#include "Hermit/Log/Log.h"
-//#include "Hermit/Log/LogSInt32.h"
-//#include "Hermit/Log/LogString.h"
-//#include "Hermit/Log/LogUInt64.h"
 #include "Hermit/Foundation/CompareMemory.h"
+#include "Hermit/Foundation/LoggingHermit.h"
 #include "Hermit/Foundation/Notification.h"
 #include "Hermit/String/AddTrailingSlash.h"
 #include "Hermit/String/GetCommonPathParent.h"
@@ -194,40 +187,54 @@ namespace copy_Impl {
 	typedef std::vector<std::string> StringVector;
 	
 	//
-	class CopyCallback : public hermit::file::FileSystemCopyCallback {
+	class IntermediateUpdateCallback : public hermit::file::FileSystemCopyIntermediateUpdateCallback {
 	public:
 		//
-		CopyCallback() : mStatus(hermit::file::FileSystemCopyResult::kUnknown) {
+		IntermediateUpdateCallback() {
 		}
 		
 		//
-		virtual bool Function(const hermit::HermitPtr& h_,
-							  const hermit::file::FileSystemCopyResult& inStatus,
-							  const hermit::file::FilePathPtr& inSourcePath,
-							  const hermit::file::FilePathPtr& inDestPath) override {
-			mStatus = inStatus;
-			if (inStatus == hermit::file::FileSystemCopyResult::kSuccess) {
+		virtual bool OnUpdate(const hermit::HermitPtr& h_,
+							  const hermit::file::FileSystemCopyResult& result,
+							  const hermit::file::FilePathPtr& sourcePath,
+							  const hermit::file::FilePathPtr& destPath) override {
+			if (result == hermit::file::FileSystemCopyResult::kSuccess) {
 				std::string sourcePathUTF8;
-				hermit::file::GetFilePathUTF8String(h_, inSourcePath, sourcePathUTF8);
-				
-				std::cout << "Copied ";
-				std::cout << sourcePathUTF8 << "\n";
+				hermit::file::GetFilePathUTF8String(h_, sourcePath, sourcePathUTF8);
+				std::cout << "Copied " << sourcePathUTF8 << "\n";
 			}
 			else {
 				std::string sourcePathUTF8;
-				hermit::file::GetFilePathUTF8String(h_, inSourcePath, sourcePathUTF8);
-				
+				hermit::file::GetFilePathUTF8String(h_, sourcePath, sourcePathUTF8);
 				std::cout << "ERROR copying " << sourcePathUTF8 << "\n";
-				
 				mErrors.push_back(sourcePathUTF8);
 			}
-			
 			return true;
 		}
 		
 		//
-		hermit::file::FileSystemCopyResult mStatus;
 		StringVector mErrors;
+	};
+	
+	//
+	class CopyCompletion : public hermit::file::FileSystemCopyCompletion {
+	public:
+		//
+		CopyCompletion() : mResult(hermit::file::FileSystemCopyResult::kUnknown) {
+		}
+		
+		//
+		virtual void Call(const hermit::HermitPtr& h_, const hermit::file::FileSystemCopyResult& result) override {
+			mResult = result;
+		}
+		
+		//
+		bool Done() {
+			return (mResult != hermit::file::FileSystemCopyResult::kUnknown);
+		}
+		
+		//
+		std::atomic<hermit::file::FileSystemCopyResult> mResult;
 	};
 	
 #if 000
@@ -411,16 +418,16 @@ namespace copy_Impl {
 	class Hermit : public hermit::Hermit {
 	public:
 		//
-		Hermit() : mFirstDifferentByte(0) {
+		Hermit(const hermit::HermitPtr& h_) : mH_(h_), mFirstDifferentByte(0) {
 		}
 		
 		//
-		virtual bool ShouldAbort() {
-			return false;
+		virtual bool ShouldAbort() override {
+			return mH_->ShouldAbort();
 		}
 		
 		//
-		virtual void Notify(const char* inName, const void* param) {
+		virtual void Notify(const char* notificationName, const void* param) override {
 #if 000
 			std::string name(inName);
 			if ((name == hermit::file::kFilesMatchNotification) ||
@@ -595,6 +602,7 @@ namespace copy_Impl {
 				}
 			}
 #endif
+			NOTIFY(mH_, notificationName, param);
 		}
 		
 		//
@@ -612,6 +620,7 @@ namespace copy_Impl {
 		}
 
 		//
+		hermit::HermitPtr mH_;
 		StringVector mErrors;
 		uint64_t mFirstDifferentByte;
 	};
@@ -1039,13 +1048,18 @@ namespace copy_Impl {
 	
 	//
 	bool Copy(const hermit::HermitPtr& h_, hermit::file::FilePathPtr sourcePath, hermit::file::FilePathPtr destPath, bool verify) {
-		CopyCallback callback;
-		hermit::file::FileSystemCopy(h_, sourcePath, destPath, callback);
-		bool success = (callback.mStatus == hermit::file::FileSystemCopyResult::kSuccess);
-		if (!callback.mErrors.empty()) {
+		auto updateCallback = std::make_shared<IntermediateUpdateCallback>();
+		auto completion = std::make_shared<CopyCompletion>();
+		hermit::file::FileSystemCopy(h_, sourcePath, destPath, updateCallback, completion);
+		while (!completion->Done()) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+		
+		bool success = (completion->mResult == hermit::file::FileSystemCopyResult::kSuccess);
+		if (!updateCallback->mErrors.empty()) {
 			std::cout << "\n-------\nThere were errors:\n";
-			StringVector::const_iterator end = callback.mErrors.end();
-			for (StringVector::const_iterator it = callback.mErrors.begin(); it != end; ++it) {
+			auto end = std::end(updateCallback->mErrors);
+			for (auto it = std::begin(updateCallback->mErrors); it != end; ++it) {
 				std::cout << *it << "\n";
 			}
 			success = false;
@@ -1067,8 +1081,8 @@ namespace copy_Impl {
 	
 	//
 	static int Copy(const std::string& inPath1, const std::string& inPath2, bool inVerify) {
-		auto h_ = std::make_shared<Hermit>();
-		
+		auto h_ = std::make_shared<Hermit>(std::make_shared<hermit::LoggingHermit>());
+
 		std::vector<char> wdBuf(2048);
 		std::string workingDir;
 		const char* cwd = getcwd(&wdBuf.at(0), 2048);
@@ -1187,18 +1201,13 @@ namespace copy_Impl {
 	}
 	
 	//
-	static int copy(
-					int argc,
-					const char* argv[])
-	{
+	static int copy(int argc, const char* argv[]) {
 		std::list<std::string> args;
-		for (int n = 1; n < argc; ++n)
-		{
+		for (int n = 1; n < argc; ++n) {
 			args.push_back(argv[n]);
 		}
 		
-		if (args.size() < 2)
-		{
+		if (args.size() < 2) {
 			usage();
 			return EXIT_FAILURE;
 		}
@@ -1208,29 +1217,23 @@ namespace copy_Impl {
 		std::string destPath;
 		bool verify = false;
 		bool verbose = false;
-		while (!args.empty())
-		{
+		while (!args.empty()) {
 			std::string arg(args.front());
-			if (arg == "-v")
-			{
+			if (arg == "-v") {
 				verbose = true;
 			}
-			else if (arg == "-y")
-			{
+			else if (arg == "-y") {
 				verify = true;
 			}
-			else if (!gotSrcPath)
-			{
+			else if (!gotSrcPath) {
 				srcPath = arg;
 				gotSrcPath = true;
 			}
-			else if (!getDestPath)
-			{
+			else if (!getDestPath) {
 				destPath = arg;
 				getDestPath = true;
 			}
-			else
-			{
+			else {
 				usage();
 				return EXIT_FAILURE;
 			}
@@ -1238,8 +1241,7 @@ namespace copy_Impl {
 		}
 		
 		std::string caption("Copy took");
-		if (verify)
-		{
+		if (verify) {
 			caption = "Copy & verify took";
 		}
 		CoutReporter reporter;

@@ -42,7 +42,7 @@ namespace compare_Impl {
         
         //
         virtual bool ShouldAbort() override {
-            return false;
+            return mH_->ShouldAbort();
         }
         
         //
