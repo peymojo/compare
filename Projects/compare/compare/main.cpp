@@ -168,7 +168,7 @@ namespace compare_Impl {
             return EXIT_FAILURE;
         }
         hermit::file::FilePathPtr filePath1;
-        hermit::file::CreateFilePathFromUTF8String(simplifiedPath1, filePath1);
+        hermit::file::CreateFilePathFromUTF8String(h_, simplifiedPath1, filePath1);
 
         std::string simplifiedPath2;
         if (!hermit::string::SimplifyPath(h_, path2, workingDir, simplifiedPath2)) {
@@ -176,7 +176,7 @@ namespace compare_Impl {
             return EXIT_FAILURE;
         }
         hermit::file::FilePathPtr filePath2;
-        hermit::file::CreateFilePathFromUTF8String(simplifiedPath2, filePath2);
+        hermit::file::CreateFilePathFromUTF8String(h_, simplifiedPath2, filePath2);
 
         hermit::file::FileExistsCallbackClass exists1;
         hermit::file::FileExists(h_, filePath1, exists1);

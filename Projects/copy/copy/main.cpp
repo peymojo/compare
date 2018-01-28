@@ -1108,7 +1108,7 @@ namespace copy_Impl {
 		}
 		
 		hermit::file::FilePathPtr filePath1;
-		hermit::file::CreateFilePathFromUTF8String(simplifiedPath1, filePath1);
+		hermit::file::CreateFilePathFromUTF8String(h_, simplifiedPath1, filePath1);
 		if (filePath1 == nullptr) {
 			NOTIFY_ERROR(h_, "CreateFilePathFromUTF8String failed for path:", simplifiedPath1);
 			return EXIT_FAILURE;
@@ -1126,7 +1126,7 @@ namespace copy_Impl {
 		}
 		
 		hermit::file::FilePathPtr filePath2;
-		hermit::file::CreateFilePathFromUTF8String(simplifiedPath2, filePath2);
+		hermit::file::CreateFilePathFromUTF8String(h_, simplifiedPath2, filePath2);
 		if (filePath2 == nullptr) {
 			NOTIFY_ERROR(h_, "CreateFilePathFromUTF8String failed for path:", simplifiedPath2);
 			return EXIT_FAILURE;
