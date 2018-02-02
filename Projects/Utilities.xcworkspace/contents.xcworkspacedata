@@ -7,9 +7,15 @@
    <FileRef
       location = "group:copy/copy.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:s3util/s3util.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Hermit">
+      <FileRef
+         location = "group:../Hermit/Hermit/Encoding/Encoding.xcodeproj">
+      </FileRef>
       <FileRef
          location = "group:../Hermit/Hermit/File/File.xcodeproj">
       </FileRef>
@@ -17,7 +23,19 @@
          location = "group:../Hermit/Hermit/Foundation/Foundation.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:../Hermit/Hermit/HTTP/HTTP.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Hermit/Hermit/S3/S3.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:../Hermit/Hermit/String/String.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Hermit/Hermit/Utility/Utility.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../Hermit/Hermit/XML/XML.xcodeproj">
       </FileRef>
    </Group>
    <FileRef

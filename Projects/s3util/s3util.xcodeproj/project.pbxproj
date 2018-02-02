@@ -1,0 +1,340 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF2CF59B1FF2356500652E69 /* ListBucketsTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5991FF2356500652E69 /* ListBucketsTool.cpp */; };
+		EF2CF5BF1FF249E900652E69 /* libFoundationLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5C01FF249E900652E69 /* libFoundationLib.a */; };
+		EF2CF5CE1FF24A0800652E69 /* libFileLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5CF1FF24A0800652E69 /* libFileLib.a */; };
+		EF2CF6181FF24A9D00652E69 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */; };
+		EF2CF61A1FF24AB800652E69 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6191FF24AB800652E69 /* Foundation.framework */; };
+		EF2CF6461FF24B4900652E69 /* libS3Lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6471FF24B4900652E69 /* libS3Lib.a */; };
+		EF2CF6581FF24C1000652E69 /* libXMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6591FF24C1000652E69 /* libXMLLib.a */; };
+		EF2CF6791FF24C4200652E69 /* libStringLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF67A1FF24C4200652E69 /* libStringLib.a */; };
+		EF2CF6A81FF24C8400652E69 /* libEncodingLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */; };
+		EF2CF6BC1FF24CB700652E69 /* libHTTPLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */; };
+		EFA01F4320248A2900821785 /* ReadKeyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFA01F4120248A2900821785 /* ReadKeyFile.cpp */; };
+		EFE91F4B201709D400281729 /* libUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE91F4C201709D400281729 /* libUtility.a */; };
+		EFF563D41FF22F2E0084DE22 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFF563D31FF22F2E0084DE22 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EFF563CE1FF22F2E0084DE22 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		EF2CF5991FF2356500652E69 /* ListBucketsTool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ListBucketsTool.cpp; sourceTree = "<group>"; };
+		EF2CF59A1FF2356500652E69 /* ListBucketsTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListBucketsTool.h; sourceTree = "<group>"; };
+		EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FoundationKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5A41FF2474B00652E69 /* FileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5A61FF247A700652E69 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5C01FF249E900652E69 /* libFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5CF1FF24A0800652E69 /* libFileLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EF2CF6191FF24AB800652E69 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EF2CF6471FF24B4900652E69 /* libS3Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libS3Lib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6591FF24C1000652E69 /* libXMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libXMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF67A1FF24C4200652E69 /* libStringLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStringLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libEncodingLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHTTPLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFA01F4120248A2900821785 /* ReadKeyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReadKeyFile.cpp; sourceTree = "<group>"; };
+		EFA01F4220248A2900821785 /* ReadKeyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadKeyFile.h; sourceTree = "<group>"; };
+		EFE91F4C201709D400281729 /* libUtility.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libUtility.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFF563D01FF22F2E0084DE22 /* s3util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = s3util; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFF563D31FF22F2E0084DE22 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EFF563CD1FF22F2E0084DE22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFE91F4B201709D400281729 /* libUtility.a in Frameworks */,
+				EF2CF6BC1FF24CB700652E69 /* libHTTPLib.a in Frameworks */,
+				EF2CF6A81FF24C8400652E69 /* libEncodingLib.a in Frameworks */,
+				EF2CF6791FF24C4200652E69 /* libStringLib.a in Frameworks */,
+				EF2CF6581FF24C1000652E69 /* libXMLLib.a in Frameworks */,
+				EF2CF6461FF24B4900652E69 /* libS3Lib.a in Frameworks */,
+				EF2CF61A1FF24AB800652E69 /* Foundation.framework in Frameworks */,
+				EF2CF6181FF24A9D00652E69 /* CoreFoundation.framework in Frameworks */,
+				EF2CF5CE1FF24A0800652E69 /* libFileLib.a in Frameworks */,
+				EF2CF5BF1FF249E900652E69 /* libFoundationLib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF2CF59D1FF2418D00652E69 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EFE91F4C201709D400281729 /* libUtility.a */,
+				EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */,
+				EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */,
+				EF2CF67A1FF24C4200652E69 /* libStringLib.a */,
+				EF2CF6591FF24C1000652E69 /* libXMLLib.a */,
+				EF2CF6471FF24B4900652E69 /* libS3Lib.a */,
+				EF2CF6191FF24AB800652E69 /* Foundation.framework */,
+				EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */,
+				EF2CF5CF1FF24A0800652E69 /* libFileLib.a */,
+				EF2CF5C01FF249E900652E69 /* libFoundationLib.a */,
+				EF2CF5A61FF247A700652E69 /* S3Kit.framework */,
+				EF2CF5A41FF2474B00652E69 /* FileKit.framework */,
+				EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EFF563C71FF22F2E0084DE22 = {
+			isa = PBXGroup;
+			children = (
+				EFF563D21FF22F2E0084DE22 /* s3util */,
+				EFF563D11FF22F2E0084DE22 /* Products */,
+				EF2CF59D1FF2418D00652E69 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EFF563D11FF22F2E0084DE22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EFF563D01FF22F2E0084DE22 /* s3util */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EFF563D21FF22F2E0084DE22 /* s3util */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF5991FF2356500652E69 /* ListBucketsTool.cpp */,
+				EF2CF59A1FF2356500652E69 /* ListBucketsTool.h */,
+				EFF563D31FF22F2E0084DE22 /* main.cpp */,
+				EFA01F4120248A2900821785 /* ReadKeyFile.cpp */,
+				EFA01F4220248A2900821785 /* ReadKeyFile.h */,
+			);
+			path = s3util;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EFF563CF1FF22F2E0084DE22 /* s3util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFF563D71FF22F2E0084DE22 /* Build configuration list for PBXNativeTarget "s3util" */;
+			buildPhases = (
+				EFF563CC1FF22F2E0084DE22 /* Sources */,
+				EFF563CD1FF22F2E0084DE22 /* Frameworks */,
+				EFF563CE1FF22F2E0084DE22 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = s3util;
+			productName = s3util;
+			productReference = EFF563D01FF22F2E0084DE22 /* s3util */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFF563C81FF22F2E0084DE22 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Hermit Code";
+				TargetAttributes = {
+					EFF563CF1FF22F2E0084DE22 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EFF563CB1FF22F2E0084DE22 /* Build configuration list for PBXProject "s3util" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EFF563C71FF22F2E0084DE22;
+			productRefGroup = EFF563D11FF22F2E0084DE22 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EFF563CF1FF22F2E0084DE22 /* s3util */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EFF563CC1FF22F2E0084DE22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFF563D41FF22F2E0084DE22 /* main.cpp in Sources */,
+				EF2CF59B1FF2356500652E69 /* ListBucketsTool.cpp in Sources */,
+				EFA01F4320248A2900821785 /* ReadKeyFile.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EFF563D51FF22F2E0084DE22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EFF563D61FF22F2E0084DE22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EFF563D81FF22F2E0084DE22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = ../../Hermit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EFF563D91FF22F2E0084DE22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = ../../Hermit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EFF563CB1FF22F2E0084DE22 /* Build configuration list for PBXProject "s3util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFF563D51FF22F2E0084DE22 /* Debug */,
+				EFF563D61FF22F2E0084DE22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFF563D71FF22F2E0084DE22 /* Build configuration list for PBXNativeTarget "s3util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFF563D81FF22F2E0084DE22 /* Debug */,
+				EFF563D91FF22F2E0084DE22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFF563C81FF22F2E0084DE22 /* Project object */;
+}
