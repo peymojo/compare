@@ -206,16 +206,18 @@ namespace compare_Impl {
         filenamesToSkip.insert("ehthumbs.db");              // Windows thumbnails file
         filenamesToSkip.insert("ehthumbs_vista.db");        // Windows thumbnails file
         filenamesToSkip.insert("Thumbs.db");                // Windows thumbnails file
-        
+		
+		auto hardLinkMap1 = std::make_shared<hermit::file::HardLinkMap>(filePath1);
+		auto hardLinkMap2 = std::make_shared<hermit::file::HardLinkMap>(filePath2);
         auto preprocessor = std::make_shared<Preprocessor>(filenamesToSkip);
         auto completion = std::make_shared<CompareCompletion>();
         hermit::file::CompareFiles(h_,
                                    filePath1,
                                    filePath2,
-								   std::make_shared<hermit::file::HardLinkMap>(filePath1),
-								   std::make_shared<hermit::file::HardLinkMap>(filePath2),
-                                   ignoreDates,
-                                   ignoreFinderInfo,
+								   hardLinkMap1,
+								   hardLinkMap2,
+								   ignoreDates ? hermit::file::IgnoreDates::kYes : hermit::file::IgnoreDates::kNo,
+								   ignoreFinderInfo ? hermit::file::IgnoreFinderInfo::kYes : hermit::file::IgnoreFinderInfo::kNo,
                                    preprocessor,
                                    completion);
         while (!completion->Done()) {

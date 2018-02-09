@@ -1016,15 +1016,17 @@ namespace copy_Impl {
 		filenamesToSkip.insert("ehthumbs_vista.db");    // Windows thumbnails file
 		filenamesToSkip.insert("Thumbs.db");            // Windows thumbnails file
 		
+		auto hardLinkMap1 = std::make_shared<hermit::file::HardLinkMap>(sourcePath);
+		auto hardLinkMap2 = std::make_shared<hermit::file::HardLinkMap>(destPath);
 		auto preprocessor = std::make_shared<Preprocessor>(filenamesToSkip);
 		auto completion = std::make_shared<CompareCompletion>();
 		hermit::file::CompareFiles(h_,
 								   sourcePath,
 								   destPath,
-								   std::make_shared<hermit::file::HardLinkMap>(sourcePath),
-								   std::make_shared<hermit::file::HardLinkMap>(destPath),
-								   false,
-								   false,
+								   hardLinkMap1,
+								   hardLinkMap2,
+								   hermit::file::IgnoreDates::kNo,
+								   hermit::file::IgnoreFinderInfo::kNo,
 								   preprocessor,
 								   completion);
 		while (!completion->Done()) {
