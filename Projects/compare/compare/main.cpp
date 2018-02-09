@@ -212,6 +212,8 @@ namespace compare_Impl {
         hermit::file::CompareFiles(h_,
                                    filePath1,
                                    filePath2,
+								   std::make_shared<hermit::file::HardLinkMap>(filePath1),
+								   std::make_shared<hermit::file::HardLinkMap>(filePath2),
                                    ignoreDates,
                                    ignoreFinderInfo,
                                    preprocessor,

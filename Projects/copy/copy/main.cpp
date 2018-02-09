@@ -1018,7 +1018,15 @@ namespace copy_Impl {
 		
 		auto preprocessor = std::make_shared<Preprocessor>(filenamesToSkip);
 		auto completion = std::make_shared<CompareCompletion>();
-		hermit::file::CompareFiles(h_, sourcePath, destPath, false, false, preprocessor, completion);
+		hermit::file::CompareFiles(h_,
+								   sourcePath,
+								   destPath,
+								   std::make_shared<hermit::file::HardLinkMap>(sourcePath),
+								   std::make_shared<hermit::file::HardLinkMap>(destPath),
+								   false,
+								   false,
+								   preprocessor,
+								   completion);
 		while (!completion->Done()) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
