@@ -131,58 +131,6 @@ namespace copy_Impl {
 		//        std::cout << "\t-v verbose\n";
 	}
 	
-#if 000
-	//
-	class Logger
-	{
-	public:
-		//
-		//
-		Logger(
-			   bool inVerbose)
-		:
-		mVerbose(inVerbose)
-		{
-		}
-		
-		//
-		//
-		void Log(
-				 const hermit::ConstCharPtr& inMessage)
-		{
-			std::cout << inMessage << "\n";
-			mErrors.push_back(inMessage);
-		}
-		
-		//
-		//
-		void PrintErrors()
-		{
-			if (!mErrors.empty())
-			{
-				std::cout << "\n-----\nThere were errors:\n";
-				
-				std::vector<std::string>::const_iterator end = mErrors.end();
-				for (std::vector<std::string>::const_iterator it = mErrors.begin(); it != end; ++it)
-				{
-					std::cout << *it << "\n";
-				}
-				
-				std::cout << "-----\n\n";
-			}
-		}
-		
-		//
-		//
-		bool mVerbose;
-		std::vector<std::string> mErrors;
-	};
-	
-	//
-	//
-	static Logger sLogger(true);
-#endif
-	
 	//
 	typedef std::vector<std::string> StringVector;
 	
@@ -320,105 +268,11 @@ namespace copy_Impl {
 		return result;
 	}
 	
-#if 000
-	//
-	class UInt64ValueCallback
-	:
-	public hermit::GetNotificationValueCallback
-	{
-	public:
-		//
-		//
-		UInt64ValueCallback()
-		:
-		mValue(0)
-		{
-		}
-		
-		//
-		//
-		bool Function(
-					  const bool& inSuccess,
-					  const hermit::ConstCharPtr& inKey,
-					  const hermit::ConstCharPtr& inValueType,
-					  const hermit::ConstVoidPtr& inValuePtr)
-		{
-			if (inSuccess && (strcmp(inValueType, "uint64") == 0) && (inValuePtr != nullptr))
-			{
-				mValue = *(const uint64_t*)inValuePtr;
-			}
-			return true;
-		}
-		
-		//
-		//
-		uint64_t mValue;
-	};
-#endif
-	
-#if 000
-	//
-	//
-	class StringValueCallback
-	:
-	public hermit::GetNotificationValueCallback
-	{
-	public:
-		//
-		//
-		bool Function(
-					  const bool& inSuccess,
-					  const hermit::ConstCharPtr& inKey,
-					  const hermit::ConstCharPtr& inValueType,
-					  const hermit::ConstVoidPtr& inValuePtr)
-		{
-			if (inSuccess && (strcmp(inValueType, "string") == 0) && (inValuePtr != nullptr))
-			{
-				mValue = (const char*)inValuePtr;
-			}
-			return true;
-		}
-		
-		//
-		//
-		std::string mValue;
-	};
-#endif
-	
-#if 000
-	//
-	//
-	class FilePathValueCallback
-	:
-	public hermit::GetNotificationValueCallback
-	{
-	public:
-		//
-		//
-		bool Function(
-					  const bool& inSuccess,
-					  const hermit::ConstCharPtr& inKey,
-					  const hermit::ConstCharPtr& inValueType,
-					  const hermit::ConstVoidPtr& inValuePtr)
-		{
-			if (inSuccess && (strcmp(inValueType, "filepath") == 0) && (inValuePtr != nullptr))
-			{
-				mFilePath = (const hermit::file::FilePathPtr)inValuePtr;
-			}
-			return true;
-		}
-		
-		//
-		//
-		hermit::file::ManagedFilePathPtr mFilePath;
-	};
-#endif
-	
 	//
 	class Hermit : public hermit::Hermit {
 	public:
 		//
-		Hermit(const hermit::HermitPtr& h_) : mH_(h_), mFirstDifferentByte(0) {
+		Hermit(const hermit::HermitPtr& h_) : mH_(h_), mSummarize(false), mFirstDifferentByte(0) {
 		}
 		
 		//
@@ -428,131 +282,90 @@ namespace copy_Impl {
 		
 		//
 		virtual void Notify(const char* notificationName, const void* param) override {
-#if 000
-			std::string name(inName);
+			std::string name(notificationName);
 			if ((name == hermit::file::kFilesMatchNotification) ||
-				(name == hermit::file::kFilesDifferNotification)) {
-				StringValueCallback notificationType;
-				inGetValueFunction.Call(hermit::file::kNotificationTypeKey, notificationType);
-				
-				FilePathValueCallback file1Path;
-				inGetValueFunction.Call(hermit::file::kFirstFilePathKey, file1Path);
-				FilePathValueCallback file2Path;
-				inGetValueFunction.Call(hermit::file::kSecondFilePathKey, file2Path);
+				(name == hermit::file::kFilesDifferNotification) ||
+				(name == hermit::file::kFileSkippedNotification) ||
+				(name == hermit::file::kFileErrorNotification)) {
+
+				hermit::file::FileNotificationParams* params = (hermit::file::FileNotificationParams*)param;
 				std::string path1UTF8;
-				if (file1Path.mFilePath != 0)
-				{
-					hermit::StringCallbackClassT<std::string> stringCallback;
-					hermit::file::GetFilePathUTF8String(file1Path, stringCallback);
-					path1UTF8 = SanitizeStringForOutput(stringCallback.mValue);
+				if (params->mPath1 != nullptr) {
+					hermit::file::GetFilePathUTF8String(mH_, params->mPath1, path1UTF8);
+					path1UTF8 = SanitizeStringForOutput(path1UTF8);
 				}
 				std::string path2UTF8;
-				if (file2Path.mFilePath != 0)
-				{
-					hermit::StringCallbackClassT<std::string> stringCallback;
-					hermit::file::GetFilePathUTF8String(file2Path, stringCallback);
-					path2UTF8 = SanitizeStringForOutput(stringCallback.mValue);
+				if (params->mPath2 != nullptr) {
+					hermit::file::GetFilePathUTF8String(mH_, params->mPath2, path2UTF8);
+					path2UTF8 = SanitizeStringForOutput(path2UTF8);
 				}
-				
-				//                if (inStatus == hermit::file::kCompareFilesStatus_Error)
-				//                {
-				//                    std::cout << "* Error: CompareFiles() failed for <" << path1UTF8 << "> and <" << path2UTF8 << ">.\n";
-				//                }
-				
-				if (name == hermit::file::kFilesMatchNotification)
-				{
+			
+				if (name == hermit::file::kFileSkippedNotification) {
+					std::cout << "Skipped: <" << path1UTF8 << ">.\n";
+				}
+				else if (name == hermit::file::kFileErrorNotification) {
+					std::cout << "* Error: CompareFiles() failed for <" << path1UTF8 << "> and <" << path2UTF8 << ">.\n";
+				}
+				else if (name == hermit::file::kFilesMatchNotification) {
 					std::cout << "Match: " << path1UTF8 << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kFileTypesDiffer)
-				{
+				else if (params->mType == hermit::file::kFileTypesDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> are different types." << "\n";
 				}
 				//                else if (inStatus == hermit::file::kCompareFilesStatus_LinkTargetsMatch)
 				//                {
 				//                    std::cout << "Match (Link/Alias Targets Match): " << path1UTF8 << "\n";
 				//                }
-				else if (notificationType.mValue == hermit::file::kItemInPath1Only)
-				{
+				else if (params->mType == hermit::file::kItemInPath1Only) {
 					std::cout << "* File only in 1: <" << path1UTF8 << ">" << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kItemInPath2Only)
-				{
+				else if (params->mType == hermit::file::kItemInPath2Only) {
 					std::cout << "* File only in 2: <" << path2UTF8 << ">" << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kCreationDatesDiffer)
-				{
+				else if (params->mType == hermit::file::kCreationDatesDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different creation dates." << "\n";
-					if (!mSummarize)
-					{
-						StringValueCallback date1;
-						inGetValueFunction.Call(hermit::file::kFirstDateKey, date1);
-						StringValueCallback date2;
-						inGetValueFunction.Call(hermit::file::kSecondDateKey, date2);
-						
-						std::cout << "* -- creation date 1: " << date1.mValue << "\n";
-						std::cout << "* -- creation date 2: " << date2.mValue << "\n";
+					if (!mSummarize) {
+						std::cout << "* -- creation date 1: " << params->mString1 << "\n";
+						std::cout << "* -- creation date 2: " << params->mString2 << "\n";
 					}
 				}
-				else if (notificationType.mValue == hermit::file::kModificationDatesDiffer)
-				{
+				else if (params->mType == hermit::file::kModificationDatesDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different modification dates." << "\n";
-					if (!mSummarize)
-					{
-						StringValueCallback date1;
-						inGetValueFunction.Call(hermit::file::kFirstDateKey, date1);
-						StringValueCallback date2;
-						inGetValueFunction.Call(hermit::file::kSecondDateKey, date2);
-						
-						std::cout << "* -- mod date 1: " << date1.mValue << "\n";
-						std::cout << "* -- mod date 2: " << date2.mValue << "\n";
+					if (!mSummarize) {
+						std::cout << "* -- mod date 1: " << params->mString1 << "\n";
+						std::cout << "* -- mod date 2: " << params->mString2 << "\n";
 					}
 				}
-				else if (notificationType.mValue == hermit::file::kPackageStatesDiffer)
-				{
+				else if (params->mType == hermit::file::kPackageStatesDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different package states." << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kFinderInfosDiffer)
-				{
+				else if (params->mType == hermit::file::kFinderInfosDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different finder info flags." << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kXAttrsDiffer)
-				{
+				else if (params->mType == hermit::file::kXAttrPresenceMismatch) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different xattrs." << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kPermissionsDiffer)
-				{
+				else if (params->mType == hermit::file::kXAttrValuesDiffer) {
+					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have xattrs with different values." << "\n";
+				}
+				else if (params->mType == hermit::file::kPermissionsDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different unix permissions flags." << "\n";
 				}
-				else if (notificationType.mValue == hermit::file::kUserOwnersDiffer)
-				{
+				else if (params->mType == hermit::file::kUserOwnersDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different user owners." << "\n";
-					if (!mSummarize)
-					{
-						StringValueCallback owner1;
-						inGetValueFunction.Call(hermit::file::kFirstOwnerKey, owner1);
-						StringValueCallback owner2;
-						inGetValueFunction.Call(hermit::file::kSecondOwnerKey, owner2);
-						
-						std::cout << "* -- user 1: " << owner1.mValue << "\n";
-						std::cout << "* -- user 2: " << owner2.mValue << "\n";
+					if (!mSummarize) {
+						std::cout << "* -- user 1: " << params->mString1 << "\n";
+						std::cout << "* -- user 2: " << params->mString2 << "\n";
 					}
 				}
-				else if (notificationType.mValue == hermit::file::kGroupOwnersDiffer)
-				{
+				else if (params->mType == hermit::file::kGroupOwnersDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different group owners." << "\n";
-					if (!mSummarize)
-					{
-						StringValueCallback owner1;
-						inGetValueFunction.Call(hermit::file::kFirstOwnerKey, owner1);
-						StringValueCallback owner2;
-						inGetValueFunction.Call(hermit::file::kSecondOwnerKey, owner2);
-						
-						std::cout << "* -- group 1: " << owner1.mValue << "\n";
-						std::cout << "* -- group 2: " << owner2.mValue << "\n";
+					if (!mSummarize) {
+						std::cout << "* -- group 1: " << params->mString1 << "\n";
+						std::cout << "* -- group 2: " << params->mString2 << "\n";
 					}
 				}
-				else if (notificationType.mValue == hermit::file::kFileSizesDiffer)
-				{
+				else if (params->mType == hermit::file::kFileSizesDiffer) {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different sizes";
 					//                    std::string forkName;
 					//                    if ((inInfoString1 != nullptr) && (*inInfoString1 != 0))
@@ -562,15 +375,9 @@ namespace copy_Impl {
 					//                    }
 					std::cout << ".\n";
 					
-					if (!mSummarize)
-					{
-						UInt64ValueCallback size1;
-						inGetValueFunction.Call(hermit::file::kFirstSizeKey, size1);
-						UInt64ValueCallback size2;
-						inGetValueFunction.Call(hermit::file::kSecondSizeKey, size2);
-						
-						std::cout << "* -- size 1: " << size1.mValue << "\n";
-						std::cout << "* -- size 2: " << size2.mValue << "\n";
+					if (!mSummarize) {
+						std::cout << "* -- size 1: " << params->mInt1 << "\n";
+						std::cout << "* -- size 2: " << params->mInt2 << "\n";
 					}
 				}
 				else
@@ -578,30 +385,27 @@ namespace copy_Impl {
 					std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> differ.\n";
 				}
 				
-				if (!mSummarize && (notificationType.mValue == hermit::file::kFileContentsDiffer))
-				{
-					UInt64ValueCallback offset;
-					inGetValueFunction.Call(hermit::file::kOffsetKey, offset);
+				if (!mSummarize && (params->mType == hermit::file::kFileContentsDiffer)) {
+					uint64_t offset = params->mInt1;
+					std::cout << "--(offset to first difference: " << offset << ")" << "\n";
 					
-					std::cout << "--(offset to first difference: " << offset.mValue << ")" << "\n";
-					
+#if 000
 					uint64_t beforeRange = 128;
-					if (beforeRange > offset.mValue)
-					{
-						beforeRange = offset.mValue;
+					if (beforeRange > offset) {
+						beforeRange = offset;
 					}
 					uint64_t afterRange = 128;
-					uint64_t rangeStart = offset.mValue - beforeRange;
-					uint64_t rangeEnd = offset.mValue + afterRange;
+					uint64_t rangeStart = offset - beforeRange;
+					uint64_t rangeEnd = offset + afterRange;
 					
 					std::cout << ">> file 1 (" << path1UTF8 << ")" << "\n";
 					DisplayByteRange(file1Path, "", rangeStart, rangeEnd);
 					
 					std::cout << ">> file 2 (" << path2UTF8 << ")" << "\n";
 					DisplayByteRange(file2Path, "", rangeStart, rangeEnd);
+#endif
 				}
 			}
-#endif
 			NOTIFY(mH_, notificationName, param);
 		}
 		
@@ -621,345 +425,11 @@ namespace copy_Impl {
 
 		//
 		hermit::HermitPtr mH_;
+		bool mSummarize;
 		StringVector mErrors;
 		uint64_t mFirstDifferentByte;
 	};
-	
-#if 000
-	//
-	//
-	class CompareFilesCallback
-	:
-	public hermit::file::CompareFilesCallback
-	{
-	public:
-		//
-		//
-		CompareFilesCallback(
-							 hermit::file::FilePathPtr inFilePath1,
-							 hermit::file::FilePathPtr inFilePath2)
-		:
-		mFilePath1(inFilePath1),
-		mFilePath2(inFilePath2),
-		mStatus(hermit::file::kCompareFilesStatus_Unknown),
-		mFirstDifferentByte(0)
-		{
-		}
 		
-		//
-		//
-		bool Function(
-					  const hermit::file::CompareFilesStatus& inStatus,
-					  const hermit::ConstCharPtr& inInfoString1,
-					  const hermit::ConstCharPtr& inInfoString2,
-					  const uint64_t& inInfoUInt64)
-		{
-			mStatus = inStatus;
-			mFirstDifferentByte = inInfoUInt64;
-			
-			hermit::StringCallbackClassT<std::string> stringCallback;
-			hermit::file::GetFilePathUTF8String(mFilePath1.P(), stringCallback);
-			std::string path1UTF8(stringCallback.mValue);
-			
-			hermit::file::GetFilePathUTF8String(mFilePath2.P(), stringCallback);
-			std::string path2UTF8(stringCallback.mValue);
-			
-			if (inStatus == hermit::file::kCompareFilesStatus_Error)
-			{
-				std::cout << "* Error: CompareFilesWithVerify() failed for <" << path1UTF8 << "> and <" << path2UTF8 << ">.\n";
-			}
-			else if (inStatus == hermit::file::kCompareFilesStatus_FilesMatch)
-			{
-				std::cout << "Match: " << path1UTF8 << "\n";
-			}
-			else if (inStatus == hermit::file::kCompareFilesStatus_LinkTargetsMatch)
-			{
-				std::cout << "Match (Link/Alias Targets Match): " << path1UTF8 << "\n";
-			}
-			else if (inStatus == hermit::file::kCompareFilesStatus_CreationDatesDiffer)
-			{
-				std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different creation dates." << "\n";
-				std::cout << "* -- creation date 1: " << inInfoString1 << "\n";
-				std::cout << "* -- creation date 2: " << inInfoString2 << "\n";
-			}
-			else if (inStatus == hermit::file::kCompareFilesStatus_ModificationDatesDiffer)
-			{
-				std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> have different creation dates." << "\n";
-				std::cout << "* -- mod date 1: " << inInfoString1 << "\n";
-				std::cout << "* -- mod date 2: " << inInfoString2 << "\n";
-			}
-			else
-			{
-				std::cout << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> differ.\n";
-			}
-			
-			if (inStatus == hermit::file::kCompareFilesStatus_FileContentsDiffer)
-			{
-				std::cout << "--(offset to first difference: " << inInfoUInt64 << ")" << "\n";
-				
-				uint64_t beforeRange = 128;
-				if (beforeRange > inInfoUInt64)
-				{
-					beforeRange = inInfoUInt64;
-				}
-				uint64_t afterRange = 128;
-				uint64_t rangeStart = inInfoUInt64 - beforeRange;
-				uint64_t rangeEnd = inInfoUInt64 + afterRange;
-				
-				std::cout << ">> file 1 (" << path1UTF8 << ")" << "\n";
-				DisplayByteRange(mFilePath1.P(), inInfoString1, rangeStart, rangeEnd);
-				
-				std::cout << ">> file 2 (" << path2UTF8 << ")" << "\n";
-				DisplayByteRange(mFilePath2.P(), inInfoString1, rangeStart, rangeEnd);
-			}
-			
-			return true;
-		}
-		
-		//
-		//
-		hermit::file::ManagedFilePathPtr mFilePath1;
-		hermit::file::ManagedFilePathPtr mFilePath2;
-		hermit::file::CompareFilesStatus mStatus;
-		uint64_t mFirstDifferentByte;
-	};
-	
-	//
-	//
-	std::string GetFileTypeString(
-								  hermit::file::FilePathPtr inPath)
-	{
-		std::string fileTypeString;
-		hermit::file::GetFileTypeCallbackClass callback;
-		hermit::file::GetFileType(
-								  inPath,
-								  callback);
-		
-		if (!callback.mSuccess)
-		{
-			hermit::file::LogFilePath(
-									  "CompareDirectoriesCallback::Function(): GetFileType failed for: ",
-									  inPath);
-		}
-		else if (callback.mFileType == hermit::file::kFileType_File)
-		{
-			fileTypeString = "Files";
-		}
-		else if (callback.mFileType == hermit::file::kFileType_Directory)
-		{
-			fileTypeString = "Directories";
-		}
-		else if (callback.mFileType == hermit::file::kFileType_SymbolicLink)
-		{
-			fileTypeString = "Links";
-		}
-		else
-		{
-			hermit::file::LogFilePath(
-									  "CompareDirectoriesCallback::Function(): GetFileType returned unexpected type for: ",
-									  inPath);
-		}
-		return fileTypeString;
-	}
-	
-	//
-	//
-	class CompareDirectoriesCallback
-	:
-	public hermit::file::CompareDirectoriesCallback
-	{
-	public:
-		//
-		//
-		CompareDirectoriesCallback()
-		:
-		mStatus(hermit::file::kCompareDirectoriesStatus_Unknown)
-		{
-		}
-		
-		//
-		//
-		bool Function(
-					  const hermit::file::CompareDirectoriesStatus& inStatus,
-					  const hermit::file::FilePathPtr& inPath1,
-					  const hermit::file::FilePathPtr& inPath2,
-					  const hermit::ConstCharPtr& inInfoString1,
-					  const hermit::ConstCharPtr& inInfoString2,
-					  const uint64_t& inInfoUInt64)
-		{
-			hermit::StringCallbackClassT<std::string> stringCallback;
-			std::string path1UTF8;
-			if (inPath1 != 0)
-			{
-				hermit::file::GetFilePathUTF8String(inPath1, stringCallback);
-				path1UTF8 = stringCallback.mValue;
-			}
-			std::string path2UTF8;
-			if (inPath2 != 0)
-			{
-				hermit::file::GetFilePathUTF8String(inPath2, stringCallback);
-				path2UTF8 = stringCallback.mValue;
-			}
-			
-			mStatus = inStatus;
-			if (inStatus == hermit::file::kCompareDirectoriesStatus_Error)
-			{
-				std::cout << "* Error: " << path1UTF8 << "\n";
-				
-				mErrors.push_back(path1UTF8);
-			}
-			else if (inStatus == hermit::file::kCompareDirectoriesStatus_Match)
-			{
-				std::cout << "Match: " << path1UTF8 << "\n";
-			}
-			else
-			{
-				std::ostringstream output;
-				std::string pathUTF8 = path1UTF8;
-				if ((inStatus == hermit::file::kCompareDirectoriesStatus_FileForksDiffer) ||
-					(inStatus == hermit::file::kCompareDirectoriesStatus_FileSizesDiffer) ||
-					(inStatus == hermit::file::kCompareDirectoriesStatus_FileContentsDiffer))
-				{
-					output << "* Files <" << path1UTF8 << "> and <" << path2UTF8 << "> differ.";
-					
-					if (inStatus == hermit::file::kCompareDirectoriesStatus_FileContentsDiffer)
-					{
-						std::cout << "--(offset to first difference: " << inInfoUInt64 << ")" << "\n";
-						
-						uint64_t beforeRange = 128;
-						if (beforeRange > inInfoUInt64)
-						{
-							beforeRange = inInfoUInt64;
-						}
-						uint64_t afterRange = 128;
-						uint64_t rangeStart = inInfoUInt64 - beforeRange;
-						uint64_t rangeEnd = inInfoUInt64 + afterRange;
-						
-						std::cout << ">> file 1 (" << path1UTF8 << ")" << "\n";
-						DisplayByteRange(inPath1, inInfoString1, rangeStart, rangeEnd);
-						
-						std::cout << ">> file 2 (" << path2UTF8 << ")" << "\n";
-						DisplayByteRange(inPath2, inInfoString1, rangeStart, rangeEnd);
-					}
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_FinderInfosDiffer)
-				{
-					std::string fileTypeString(GetFileTypeString(inPath1));
-					if (fileTypeString.empty())
-					{
-						return false;
-					}
-					output << "* " << fileTypeString << "<" << path1UTF8 << "> and <" << path2UTF8 << "> have different finder info flags set.";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_CreationDatesDiffer)
-				{
-					std::string fileTypeString(GetFileTypeString(inPath1));
-					if (fileTypeString.empty())
-					{
-						return false;
-					}
-					output << "* " << fileTypeString << " <" << path1UTF8 << "> and <" << path2UTF8 << "> have different creation dates." << "\n";
-					output << "* -- creation date 1: " << inInfoString1 << "\n";
-					output << "* -- creation date 2: " << inInfoString2;
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_ModificationDatesDiffer)
-				{
-					std::string fileTypeString(GetFileTypeString(inPath1));
-					if (fileTypeString.empty())
-					{
-						return false;
-					}
-					output << "* " << fileTypeString << " <" << path1UTF8 << "> and <" << path2UTF8 << "> have different modification dates." << "\n";
-					output << "* -- mod date 1: " << inInfoString1 << "\n";
-					output << "* -- mod date 2: " << inInfoString2;
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_UserOwnersDiffer)
-				{
-					std::string fileTypeString(GetFileTypeString(inPath1));
-					if (fileTypeString.empty())
-					{
-						return false;
-					}
-					output << "* " << fileTypeString << " <" << path1UTF8 << "> and <" << path2UTF8 << "> have different user owners." << "\n";
-					output << "* -- user 1: " << inInfoString1 << "\n";
-					output << "* -- user 2: " << inInfoString2;
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_GroupOwnersDiffer)
-				{
-					std::string fileTypeString(GetFileTypeString(inPath1));
-					if (fileTypeString.empty())
-					{
-						return false;
-					}
-					output << "* " << fileTypeString << " <" << path1UTF8 << "> and <" << path2UTF8 << "> have different group owners." << "\n";
-					output << "* -- group 1: " << inInfoString1 << "\n";
-					output << "* -- group 2: " << inInfoString2;
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_FileTypesDiffer)
-				{
-					output << "* Items <" << path1UTF8 << "> and <" << path2UTF8 << "> are of different types. (Perhaps one is an alias?)";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_DirectoriesDiffer)
-				{
-					output << "* Directories <" << path1UTF8 << "> and <" << path2UTF8 << "> differ.";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_DirectoryPackageStatesDiffer)
-				{
-					output << "* Directories <" << path1UTF8 << "> and <" << path2UTF8 << "> have different package states.";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_LinksDiffer)
-				{
-					output << "* Links <" << path1UTF8 << "> and <" << path2UTF8 << "> differ.";
-					//                    output << "[ Link 1 Target: <" << link1TargetPathUTF8 << "> ] ";
-					//                    output << "[ Link 2 Target: <" << link2TargetPathUTF8 << "> ]";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_FileInPath1Only)
-				{
-					output << "* File only in 1: <" << pathUTF8 << ">";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_FileInPath2Only)
-				{
-					pathUTF8 = path2UTF8;
-					output << "* File only in 2: <" << pathUTF8 << ">";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_DirectoryInPath1Only)
-				{
-					output << "* Directory only in 1: <" << pathUTF8 << ">";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_DirectoryInPath2Only)
-				{
-					pathUTF8 = path2UTF8;
-					output << "* Directory only in 2: <" << pathUTF8 << ">";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_LinkInPath1Only)
-				{
-					output << "* Link only in 1: <" << pathUTF8 << ">";
-				}
-				else if (inStatus == hermit::file::kCompareDirectoriesStatus_LinkInPath2Only)
-				{
-					pathUTF8 = path2UTF8;
-					output << "* Link only in 2: <" << pathUTF8 << ">";
-				}
-				else
-				{
-					output << ">>> Unrecognized status for files <" << path1UTF8 << "> and <" << path2UTF8 <<">";
-					mErrors.push_back(pathUTF8);
-				}
-				
-				std::cout << output.str() << "\n";
-				mMismatches.push_back(output.str());
-			}
-			return true;
-		}
-		
-		//
-		//
-		hermit::file::CompareDirectoriesStatus mStatus;
-		StringVector mErrors;
-		StringVector mMismatches;
-	};
-#endif
-	
 	//
 	typedef std::set<std::string> StringSet;
 	
