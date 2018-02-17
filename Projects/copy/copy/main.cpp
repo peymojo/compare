@@ -29,7 +29,6 @@
 #include "Hermit/File/AppendToFilePath.h"
 #include "Hermit/File/CompareFiles.h"
 #include "Hermit/File/CreateFilePathFromUTF8String.h"
-#include "Hermit/File/GetFileType.h"
 #include "Hermit/File/GetFilePathLeaf.h"
 #include "Hermit/File/GetFilePathParent.h"
 #include "Hermit/File/GetFilePathUTF8String.h"
