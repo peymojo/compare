@@ -16,6 +16,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <iomanip>
 #include <iostream>
 #include <list>
 #include <set>
@@ -47,6 +48,14 @@ namespace compare_Impl {
 		if (params.mType == hermit::file::kCreationDatesDiffer) {
 			strm << "\t" << "Date 1: " << params.mString1 << std::endl;
 			strm << "\t" << "Date 2: " << params.mString2 << std::endl;
+		}
+		else if (params.mType == hermit::file::kModificationDatesDiffer) {
+			strm << "\t" << "Date 1: " << params.mString1 << std::endl;
+			strm << "\t" << "Date 2: " << params.mString2 << std::endl;
+		}
+		else if (params.mType == hermit::file::kBSDFlagsDiffer) {
+			strm << "\t" << "File 1 flags: 0x" << std::setfill('0') << std::setw(8) << std::hex << params.mInt1 << "\n";
+			strm << "\t" << "File 2 flags: 0x" << std::setfill('0') << std::setw(8) << std::hex << params.mInt2 << "\n";
 		}
 		else if (params.mType == hermit::file::kXAttrPresenceMismatch) {
 			if (!params.mString1.empty()) {
