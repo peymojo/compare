@@ -33,6 +33,44 @@
 
 namespace compare_Impl {
 
+	//
+	typedef std::shared_ptr<hermit::file::FileNotificationParams> FileNotificationParamsPtr;
+	typedef std::vector<FileNotificationParamsPtr> FileNotificationParamsVector;
+	
+	//
+	void OutputDifference(const hermit::HermitPtr& h_,
+						  const std::string& path1UTF8,
+						  const std::string& path2,
+						  const hermit::file::FileNotificationParams& params,
+						  std::ostream& strm) {
+		strm << "Different: " << path1UTF8 << " (" << params.mType << ")" << std::endl;
+		if (params.mType == hermit::file::kCreationDatesDiffer) {
+			strm << "\t" << "Date 1: " << params.mString1 << std::endl;
+			strm << "\t" << "Date 2: " << params.mString2 << std::endl;
+		}
+		else if (params.mType == hermit::file::kXAttrPresenceMismatch) {
+			if (!params.mString1.empty()) {
+				strm << "\t" << "Only in 1: " << params.mString1 << std::endl;
+			}
+			else {
+				strm << "\t" << "Only in 2: " << params.mString2 << std::endl;
+			}
+		}
+	}
+	
+	//
+	void OutputDifference(const hermit::HermitPtr& h_, const hermit::file::FileNotificationParams& params, std::ostream& strm) {
+		std::string path1UTF8;
+		if (params.mPath1 != nullptr) {
+			hermit::file::GetFilePathUTF8String(h_, params.mPath1, path1UTF8);
+		}
+		std::string path2UTF8;
+		if (params.mPath2 != nullptr) {
+			hermit::file::GetFilePathUTF8String(h_, params.mPath2, path2UTF8);
+		}
+		OutputDifference(h_, path1UTF8, path2UTF8, params, strm);
+	}
+	
     //
     class Hermit : public hermit::Hermit {
     public:
@@ -50,7 +88,6 @@ namespace compare_Impl {
             std::lock_guard<std::mutex> guard(mMutex);
             
             std::string name(notificationName);
-            
             if ((name == hermit::file::kFilesMatchNotification) ||
                 (name == hermit::file::kFilesDifferNotification) ||
                 (name == hermit::file::kFileSkippedNotification) ||
@@ -70,35 +107,53 @@ namespace compare_Impl {
                     std::cout << "Match: " << path1UTF8 << std::endl;
                 }
                 else if (name == hermit::file::kFilesDifferNotification) {
-                    std::cout << "Different: " << path1UTF8 << " (" << params->mType << ")" << std::endl;
-                    if (params->mType == hermit::file::kCreationDatesDiffer) {
-                        std::cout << "\t" << "Date 1: " << params->mString1 << std::endl;
-                        std::cout << "\t" << "Date 2: " << params->mString2 << std::endl;
-                    }
-                    else if (params->mType == hermit::file::kXAttrPresenceMismatch) {
-                        if (!params->mString1.empty()) {
-                            std::cout << "\t" << "Only in 1: " << params->mString1 << std::endl;
-                        }
-                        else {
-                            std::cout << "\t" << "Only in 2: " << params->mString2 << std::endl;
-                        }
-                    }
+					OutputDifference(mH_, path1UTF8, path2UTF8, *params, std::cout);
+					mDifferences.push_back(std::make_shared<hermit::file::FileNotificationParams>(*params));
                 }
                 else if (name == hermit::file::kFileSkippedNotification) {
                     std::cout << "Skipped: " << path1UTF8 << std::endl;
                 }
                 else {
                     std::cout << "ERROR: " << path1UTF8 << std::endl;
+					mErrors.push_back(std::make_shared<hermit::file::FileNotificationParams>(*params));
                 }
             }
             else {
                 NOTIFY(mH_, notificationName, param);
             }
         }
-        
+		
+		//
+		void ShowDifferences() {
+			if (mDifferences.empty()) {
+				return;
+			}
+			std::cout << "\n" << "DIFFERENCES:" << "\n";
+			for (auto it = begin(mDifferences); it != end(mDifferences); ++it) {
+				OutputDifference(mH_, **it, std::cout);
+			}
+		}
+		
+		//
+		void ShowErrors() {
+			if (mErrors.empty()) {
+				return;
+			}
+			std::cout << "\n" << "ERRORS:" << "\n";
+			for (auto it = begin(mErrors); it != end(mErrors); ++it) {
+				std::string path1UTF8;
+				if ((*it)->mPath1 != nullptr) {
+					hermit::file::GetFilePathUTF8String(mH_, (*it)->mPath1, path1UTF8);
+				}
+				std::cout << "ERROR: " << path1UTF8 << std::endl;
+			}
+		}
+		
         //
         hermit::HermitPtr mH_;
         std::mutex mMutex;
+		FileNotificationParamsVector mDifferences;
+		FileNotificationParamsVector mErrors;
     };
 
     //
@@ -223,6 +278,8 @@ namespace compare_Impl {
         while (!completion->Done()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+		h_->ShowDifferences();
+		h_->ShowErrors();
         
         return 0;
     }
