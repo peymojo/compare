@@ -96,7 +96,7 @@ namespace compare_Impl {
     class Hermit : public hermit::Hermit {
     public:
         //
-        Hermit(const hermit::HermitPtr& h_) : mH_(h_) {
+        Hermit(const hermit::HermitPtr& h_, bool showMatches) : mH_(h_), mShowMatches(showMatches) {
         }
         
         //
@@ -125,7 +125,9 @@ namespace compare_Impl {
                 }
                 
                 if (name == hermit::file::kFilesMatchNotification) {
-                    std::cout << "Match: " << path1UTF8 << std::endl;
+					if (mShowMatches) {
+                    	std::cout << "Match: " << path1UTF8 << std::endl;
+					}
                 }
                 else if (name == hermit::file::kFilesDifferNotification) {
 					OutputDifference(mH_, path1UTF8, path2UTF8, *params, std::cout);
@@ -172,6 +174,7 @@ namespace compare_Impl {
 		
         //
         hermit::HermitPtr mH_;
+		bool mShowMatches;
         std::mutex mMutex;
 		FileNotificationParamsVector mDifferences;
 		FileNotificationParamsVector mErrors;
@@ -225,8 +228,8 @@ namespace compare_Impl {
     };
     
     //
-    int compare(const std::string& path1, const std::string& path2, bool ignoreDates, bool ignoreFinderInfo, bool summarize) {
-        auto h_ = std::make_shared<Hermit>(std::make_shared<hermit::LoggingHermit>());
+    int compare(const std::string& path1, const std::string& path2, bool ignoreDates, bool ignoreFinderInfo, bool showMatches) {
+        auto h_ = std::make_shared<Hermit>(std::make_shared<hermit::LoggingHermit>(), showMatches);
 
         std::vector<char> wdBuf(2048);
         std::string workingDir;
@@ -299,8 +302,15 @@ namespace compare_Impl {
         while (!completion->Done()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-		h_->ShowDifferences();
+		if (showMatches) {
+			// Recap all the differences since they may be hard to pick out from among the matches.
+			h_->ShowDifferences();
+		}
 		h_->ShowErrors();
+		
+		if (!showMatches && h_->mDifferences.empty() && h_->mErrors.empty()) {
+			std::cout << "Items match." << "\n";
+		}
         
         return 0;
     }
@@ -320,13 +330,13 @@ int main(int argc, const char * argv[]) {
         std::cout << "[options]:" << "\n";
         std::cout << "\t-d ignore creation/modification dates when comparing items" << "\n";
         std::cout << "\t-f ignore finder info when comparing items" << "\n";
-        std::cout << "\t-s summarize differences without going into detail" << "\n";
+        std::cout << "\t-m show matches" << "\n";
         return EXIT_FAILURE;
     }
     
     bool ignoreDates = false;
     bool ignoreFinderInfo = false;
-    bool summarize = false;
+    bool showMatches = false;
     std::string path1;
     std::string path2;
     while (!args.empty()) {
@@ -338,8 +348,8 @@ int main(int argc, const char * argv[]) {
         else if (arg == "-f") {
             ignoreFinderInfo = true;
         }
-        else if (arg == "-s") {
-            summarize = true;
+        else if (arg == "-m") {
+            showMatches = true;
         }
         else if (path1.empty()) {
             path1 = arg;
@@ -348,5 +358,5 @@ int main(int argc, const char * argv[]) {
             path2 = arg;
         }
     }
-    return compare(path1, path2, ignoreDates, ignoreFinderInfo, summarize);
+    return compare(path1, path2, ignoreDates, ignoreFinderInfo, showMatches);
 }
