@@ -50,7 +50,9 @@ namespace compare_Impl {
 		else if (params.mType == hermit::file::kItemInPath2Only) {
 			strm << "Only In 2: " << path2UTF8 << std::endl;
 		}
-		else {
+		// kFolderContentsDiffer just means there was a difference somewhere under this directory.
+		// In practice it's a bit noisy to show these all the time.
+		else if (params.mType != hermit::file::kFolderContentsDiffer) {
 			strm << "Different: " << path1UTF8 << " (" << params.mType << ")" << std::endl;
 		}
 		if (params.mType == hermit::file::kCreationDatesDiffer) {
