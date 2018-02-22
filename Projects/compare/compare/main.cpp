@@ -41,10 +41,18 @@ namespace compare_Impl {
 	//
 	void OutputDifference(const hermit::HermitPtr& h_,
 						  const std::string& path1UTF8,
-						  const std::string& path2,
+						  const std::string& path2UTF8,
 						  const hermit::file::FileNotificationParams& params,
 						  std::ostream& strm) {
-		strm << "Different: " << path1UTF8 << " (" << params.mType << ")" << std::endl;
+		if (params.mType == hermit::file::kItemInPath1Only) {
+			strm << "Only In 1: " << path1UTF8 << std::endl;
+		}
+		else if (params.mType == hermit::file::kItemInPath2Only) {
+			strm << "Only In 2: " << path2UTF8 << std::endl;
+		}
+		else {
+			strm << "Different: " << path1UTF8 << " (" << params.mType << ")" << std::endl;
+		}
 		if (params.mType == hermit::file::kCreationDatesDiffer) {
 			strm << "\t" << "Date 1: " << params.mString1 << std::endl;
 			strm << "\t" << "Date 2: " << params.mString2 << std::endl;
