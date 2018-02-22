@@ -65,6 +65,14 @@ namespace compare_Impl {
 			strm << "\t" << "Target 1: " << params.mString1 << std::endl;
 			strm << "\t" << "Target 2: " << params.mString2 << std::endl;
 		}
+		else if (params.mType == hermit::file::kUserOwnersDiffer) {
+			strm << "\t" << "User Owner 1: " << params.mString1 << "\n";
+			strm << "\t" << "User Owner 2: " << params.mString2 << "\n";
+		}
+		else if (params.mType == hermit::file::kGroupOwnersDiffer) {
+			strm << "\t" << "Group Owner 1: " << params.mString1 << "\n";
+			strm << "\t" << "Group Owner 2: " << params.mString2 << "\n";
+		}
 		else if (params.mType == hermit::file::kBSDFlagsDiffer) {
 			strm << "\t" << "File 1 flags: 0x" << std::setfill('0') << std::setw(8) << std::hex << params.mInt1 << "\n";
 			strm << "\t" << "File 2 flags: 0x" << std::setfill('0') << std::setw(8) << std::hex << params.mInt2 << "\n";
