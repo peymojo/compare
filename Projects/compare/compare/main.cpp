@@ -144,7 +144,9 @@ namespace compare_Impl {
 					mDifferences.push_back(std::make_shared<hermit::file::FileNotificationParams>(*params));
                 }
                 else if (name == hermit::file::kFileSkippedNotification) {
-                    std::cout << "Skipped: " << path1UTF8 << std::endl;
+					if (mShowMatches) {
+                    	std::cout << "Skipped: " << path1UTF8 << std::endl;
+					}
                 }
                 else {
                     std::cout << "ERROR: " << path1UTF8 << std::endl;
@@ -340,7 +342,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "[options]:" << "\n";
         std::cout << "\t-d ignore creation/modification dates when comparing items" << "\n";
         std::cout << "\t-f ignore finder info when comparing items" << "\n";
-        std::cout << "\t-m show matches" << "\n";
+        std::cout << "\t-m show matches and skipped items" << "\n";
         return EXIT_FAILURE;
     }
     
