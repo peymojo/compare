@@ -281,6 +281,8 @@ namespace copy_Impl {
 		
 		//
 		virtual void Notify(const char* notificationName, const void* param) override {
+			std::lock_guard<std::mutex> guard(mMutex);
+
 			std::string name(notificationName);
 			if ((name == hermit::file::kFilesMatchNotification) ||
 				(name == hermit::file::kFilesDifferNotification) ||
@@ -425,6 +427,7 @@ namespace copy_Impl {
 		//
 		hermit::HermitPtr mH_;
 		bool mSummarize;
+		std::mutex mMutex;
 		StringVector mErrors;
 		uint64_t mFirstDifferentByte;
 	};
